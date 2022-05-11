@@ -83,19 +83,13 @@ int Application::Update()
             }
         }
         // Update player position if player is moving
-        sf::Vector2f tempPos = player.position; 
-        if (player.nextNode)
-        {
-            if (player.nextNode->type != TileType::obstacle)
-            {
-                tempPos.x = player.position.x + player.direction.x;
-                tempPos.y = player.position.y + player.direction.y;
-                player.position = tempPos;
-            }
-        }
-        // Update player neighbours
+        sf::Vector2f tempPos = player.position;
+        tempPos.x = player.position.x + (player.direction.x * playerSpeed);
+        tempPos.y = player.position.y + (player.direction.y * playerSpeed);
+        player.position = tempPos;
+        // Update player current node
         player.currentNode = &grid[(int)(std::floor((tempPos.x + (shapeWidth * 0.5f)) / shapeWidth))][(int)(std::floor((tempPos.y + (shapeHeight * 0.5f)) / shapeHeight))];
-
+        // Update player neighbours
         player.leftAdj = &grid[player.currentNode->gridPos.x - 1][player.currentNode->gridPos.y];
         player.rightAdj = &grid[player.currentNode->gridPos.x + 1][player.currentNode->gridPos.y];
         player.upAdj = &grid[player.currentNode->gridPos.x][player.currentNode->gridPos.y - 1];

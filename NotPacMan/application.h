@@ -28,5 +28,6 @@ public:
 	Player player;
 	float playerTimer;
 	float playerTimerMax = 50;
-	float movementTolerance = 5.0f;
+	float playerSpeed = 1.5f;
+	float movementTolerance = 10.0f;
 };
