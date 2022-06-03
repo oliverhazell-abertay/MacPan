@@ -152,12 +152,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="node.cpp" />
     <ClCompile Include="NotPacMan.cpp" />
     <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="enemy.h" />
+    <ClInclude Include="gameObject.h" />
     <ClInclude Include="node.h" />
     <ClInclude Include="player.h" />
   </ItemGroup>

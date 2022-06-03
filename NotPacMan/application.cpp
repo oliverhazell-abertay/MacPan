@@ -12,11 +12,11 @@ void Application::Init(sf::RenderWindow* wind)
     // Init player
     player.position = sf::Vector2f(shapeWidth, shapeHeight);
     player.direction = sf::Vector2f(1.0f, 0.0f);    // Start player moving right
-    player.playerShape.setPosition(player.position);
-    player.playerShape.setSize(sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f));
-    player.playerShape.setFillColor(sf::Color::Green);
-    player.playerShape.setOutlineColor(sf::Color::Black);
-    player.playerShape.setOutlineThickness(0.0f);
+    player.shape.setPosition(player.position);
+    player.shape.setSize(sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f));
+    player.shape.setFillColor(sf::Color::Green);
+    player.shape.setOutlineColor(sf::Color::Black);
+    player.shape.setOutlineThickness(0.0f);
     player.direction = sf::Vector2f(1.0f, 0.0f);
 }
 
@@ -114,7 +114,7 @@ void Application::Render()
             grid[i][j].Render(window);
         }
     }
-    window->draw(player.playerShape);
+    window->draw(player.shape);
     window->display();
 }
 
