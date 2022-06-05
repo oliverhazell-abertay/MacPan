@@ -156,6 +156,7 @@
     <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="node.cpp" />
     <ClCompile Include="NotPacMan.cpp" />
+    <ClCompile Include="pathfinder.cpp" />
     <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="gameObject.h" />
     <ClInclude Include="node.h" />
+    <ClInclude Include="pathfinder.h" />
     <ClInclude Include="player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

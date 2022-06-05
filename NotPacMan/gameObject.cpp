@@ -1,5 +1,4 @@
 #include "gameObject.h"
-
 #include "player.h"
 
 void GameObject::Update()

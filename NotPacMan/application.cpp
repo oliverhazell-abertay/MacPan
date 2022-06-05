@@ -11,13 +11,18 @@ void Application::Init(sf::RenderWindow* wind)
     InitGrid();
     // Init player
     player.position = sf::Vector2f(shapeWidth, shapeHeight);
-    player.direction = sf::Vector2f(1.0f, 0.0f);    // Start player moving right
+    player.direction = sf::Vector2f(0.0f, 0.0f);    // Start player moving right
     player.shape.setPosition(player.position);
     player.shape.setSize(sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f));
     player.shape.setFillColor(sf::Color::Green);
     player.shape.setOutlineColor(sf::Color::Black);
     player.shape.setOutlineThickness(0.0f);
     player.direction = sf::Vector2f(1.0f, 0.0f);
+    // Init pathfinder
+    pathfinder.Init(grid);
+    pathfinder.SetStart(&grid[17][10]);
+    pathfinder.SetEnd(&grid[1][1]);
+    pathfinder.FindPath();
 }
 
 void Application::CleanUp()
@@ -105,17 +110,18 @@ int Application::Update()
 
 void Application::Render()
 {
-    window->clear();
-    // Draw grid
-    for (int i = 0; i < GRID_WIDTH; i++)
-    {
-        for (int j = 0; j < GRID_HEIGHT; j++)
-        {
-            grid[i][j].Render(window);
-        }
-    }
-    window->draw(player.shape);
-    window->display();
+    //window->clear();
+    //// Draw grid
+    //for (int i = 0; i < GRID_WIDTH; i++)
+    //{
+    //    for (int j = 0; j < GRID_HEIGHT; j++)
+    //    {
+    //        grid[i][j].Render(window);
+    //    }
+    //}
+    //window->draw(player.shape);
+    //window->display();
+    pathfinder.Render(window);
 }
 
 void Application::InitGrid()
@@ -126,13 +132,30 @@ void Application::InitGrid()
         {
             // Variables
             grid[i][j].Init(sf::Vector2f(i * shapeWidth, j * shapeHeight), sf::Vector2f(shapeWidth, shapeHeight), sf::Vector2i(i, j), TileType::pellet);
-            FileToGrid("level.txt");
+            // Neighbours - Only assign neighbour in direction if node
+            //              is not on an edge
+            //North
+            if (j > 0)
+                grid[i][j].neighboursOrth.push_back(&grid[i][j - 1]);
+            // South
+            if (j < GRID_HEIGHT - 1)
+                grid[i][j].neighboursOrth.push_back(&grid[i][j + 1]);
+            // East
+            if (i < GRID_WIDTH - 1)
+                grid[i][j].neighboursOrth.push_back(&grid[i + 1][j]);
+            // West
+            if (i > 0)
+                grid[i][j].neighboursOrth.push_back(&grid[i - 1][j]);
         }
     }
+    // Load each tile's type from file
+    FileToGrid("level.txt");
 }
 
 void Application::FileToGrid(std::string filename)
 {
+    // For every line of file, take each number corresponding to
+    // node in grid. Convert number to tile type and assign.
     std::fstream myFile(filename, std::ios_base::in);
     for (int j = 0; j < GRID_HEIGHT; j++)
     {

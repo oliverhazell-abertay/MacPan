@@ -34,6 +34,7 @@ void Node::Init(sf::Vector2f initWorldPos, sf::Vector2f initSize, sf::Vector2i g
 	tempPos.y = tempPos.y + (size.y * 0.25f);
 	powerPellet.setPosition(tempPos);
 }
+
 void Node::Render(sf::RenderWindow* window)
 {
 	// If obstacle, set tile to black, if not then reset to white
@@ -50,4 +51,44 @@ void Node::Render(sf::RenderWindow* window)
 		window->draw(powerPellet);
 }
 
+void Node::CalculateFGH(Node* startNode, Node* endNode)
+{
+	// If not start or end node work out distances
+	if (startNode->gridPos != gridPos || endNode->gridPos != gridPos)
+	{
+		gCost = CalculateG(startNode);
+		hCost = CalculateH(endNode);
+		fCost = CalculateF();
+	}
+}
 
+int Node::CalculateG(Node* startNode)
+{
+	int startNodeX, startNodeY;
+	startNodeX = startNode->gridPos.x;
+	startNodeY = startNode->gridPos.y;
+	// x distance
+	int xDistance = abs(gridPos.x - startNodeX);
+	// y distance
+	int yDistance = abs(gridPos.y - startNodeY);
+
+	return xDistance + yDistance;
+}
+
+int Node::CalculateH(Node* endNode)
+{
+	int endNodeX, endNodeY;
+	endNodeX = endNode->gridPos.x;
+	endNodeY = endNode->gridPos.y;
+	// x distance
+	int xDistance = abs(gridPos.x - endNodeX);
+	// y distance
+	int yDistance = abs(gridPos.y - endNodeY);
+
+	return xDistance + yDistance;
+}
+
+int Node::CalculateF()
+{
+	return gCost + hCost;
+}
