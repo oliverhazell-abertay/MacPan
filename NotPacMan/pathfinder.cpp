@@ -56,6 +56,10 @@ void Pathfinder::Render(sf::RenderWindow* window)
 
 void Pathfinder::FindPath()
 {
+    // Clear node lists and path
+    openNodes.clear();
+    closedNodes.clear();
+    path.clear();
     // Add start node to open
     openNodes.push_back(startNode);
     Node* currentNode = *openNodes.begin();
@@ -118,11 +122,11 @@ void Pathfinder::FindPath()
         }
     }
 
-    // Colour path
+    // Fill path
     currentNode = endNode;
     while (currentNode != startNode)
     {
-        currentNode->type = TileType::blank;
+        path.push_back(currentNode);
         currentNode = currentNode->parent;
     }
 }

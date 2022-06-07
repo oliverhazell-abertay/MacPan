@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "node.h"
 #include "player.h"
-#include "pathfinder.h"
+#include "enemy.h"
 
 #define WINDOW_WIDTH 1600
 #define WINDOW_HEIGHT 900
@@ -12,12 +12,12 @@
 class Application
 {
 public:
-	void Init(sf::RenderWindow*);
+	void Init(sf::RenderWindow* window);
 	void CleanUp();
 	int Update();
 	void Render();
 	void InitGrid();
-	void FileToGrid(std::string);
+	void FileToGrid(std::string filename);
 	bool FuzzyEquals(float a, float b, float tolerance);
 
 	Node grid[GRID_WIDTH][GRID_HEIGHT];
@@ -33,5 +33,6 @@ public:
 	float playerSpeed = 1.5f;
 	float movementTolerance = 10.0f;
 
-	Pathfinder pathfinder;
+	// Enemy values -- TO BE MOVED TO ENEMY CLASS
+	Enemy enemy;
 };

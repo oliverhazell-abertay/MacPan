@@ -9,7 +9,7 @@ void Application::Init(sf::RenderWindow* wind)
     window = wind;
     // Init grid
     InitGrid();
-    // Init player
+    // Init player -- TO BE MOVED TO PLAYER CLASS INIT
     player.position = sf::Vector2f(shapeWidth, shapeHeight);
     player.direction = sf::Vector2f(0.0f, 0.0f);    // Start player moving right
     player.shape.setPosition(player.position);
@@ -17,12 +17,15 @@ void Application::Init(sf::RenderWindow* wind)
     player.shape.setFillColor(sf::Color::Green);
     player.shape.setOutlineColor(sf::Color::Black);
     player.shape.setOutlineThickness(0.0f);
-    player.direction = sf::Vector2f(1.0f, 0.0f);
-    // Init pathfinder
-    pathfinder.Init(grid);
-    pathfinder.SetStart(&grid[17][10]);
-    pathfinder.SetEnd(&grid[1][1]);
-    pathfinder.FindPath();
+    // Init enemy -- TO BE MOVED TO ENEMY CLASS INIT
+    enemy.Init(grid, &player);
+    enemy.position = sf::Vector2f(shapeWidth * 17, shapeHeight * 9);
+    enemy.shape.setPosition(enemy.position);
+    enemy.shape.setSize(sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f));
+    enemy.shape.setFillColor(sf::Color::Red);
+    enemy.shape.setOutlineColor(sf::Color::Black);
+    enemy.shape.setOutlineThickness(0.0f);
+    enemy.direction = sf::Vector2f(-1.0f, 0.0f);
 }
 
 void Application::CleanUp()
@@ -99,8 +102,24 @@ int Application::Update()
         player.rightAdj = &grid[player.currentNode->gridPos.x + 1][player.currentNode->gridPos.y];
         player.upAdj = &grid[player.currentNode->gridPos.x][player.currentNode->gridPos.y - 1];
         player.downAdj = &grid[player.currentNode->gridPos.x][player.currentNode->gridPos.y + 1];
-
+        // Player update
         player.Update();
+
+        // Update enemy position
+        tempPos = enemy.position;
+        tempPos.x = enemy.position.x + (enemy.direction.x * playerSpeed);
+        tempPos.y = enemy.position.y + (enemy.direction.y * playerSpeed);
+        enemy.position = tempPos;
+        // Update enemy current node
+        enemy.currentNode = &grid[(int)(std::floor((tempPos.x + (shapeWidth * 0.5f)) / shapeWidth))][(int)(std::floor((tempPos.y + (shapeHeight * 0.5f)) / shapeHeight))];
+         // Update enemy neighbours
+        enemy.leftAdj = &grid[enemy.currentNode->gridPos.x - 1][enemy.currentNode->gridPos.y];
+        enemy.rightAdj = &grid[enemy.currentNode->gridPos.x + 1][enemy.currentNode->gridPos.y];
+        enemy.upAdj = &grid[enemy.currentNode->gridPos.x][enemy.currentNode->gridPos.y - 1];
+        enemy.downAdj = &grid[enemy.currentNode->gridPos.x][enemy.currentNode->gridPos.y + 1];
+        // Enemy update
+        enemy.Update();
+
         // Render
         Render();
     }
@@ -110,18 +129,18 @@ int Application::Update()
 
 void Application::Render()
 {
-    //window->clear();
-    //// Draw grid
-    //for (int i = 0; i < GRID_WIDTH; i++)
-    //{
-    //    for (int j = 0; j < GRID_HEIGHT; j++)
-    //    {
-    //        grid[i][j].Render(window);
-    //    }
-    //}
-    //window->draw(player.shape);
-    //window->display();
-    pathfinder.Render(window);
+    window->clear();
+    // Draw grid
+    for (int i = 0; i < GRID_WIDTH; i++)
+    {
+        for (int j = 0; j < GRID_HEIGHT; j++)
+        {
+            grid[i][j].Render(window);
+        }
+    }
+    window->draw(player.shape);
+    window->draw(enemy.shape);
+    window->display();
 }
 
 void Application::InitGrid()
