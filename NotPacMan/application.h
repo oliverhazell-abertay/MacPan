@@ -33,6 +33,11 @@ public:
 	float playerSpeed = 1.5f;
 	float movementTolerance = 10.0f;
 
-	// Enemy values -- TO BE MOVED TO ENEMY CLASS
-	Enemy enemy;
+	// Enemies
+	Enemy blinky;
+	Enemy pinky;
+
+	// Collision detection
+	bool AABBCollision(sf::RectangleShape a, sf::RectangleShape b);
+
 };

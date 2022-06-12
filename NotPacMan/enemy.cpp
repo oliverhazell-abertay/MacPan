@@ -55,7 +55,7 @@ void Enemy::MoveTowardsTarget()
 		direction.x = 0.0f;
 		direction.y = (target.gridPos.y < currentNode->gridPos.y) ? -1.0f : 1.0f;
 	}
-	// Check if target has been reached
+	// Check if target has been reached 
 	if (FuzzyEquals(position.x, target.GetWorldPos().x, 2.0f)
 		&& FuzzyEquals(position.y, target.GetWorldPos().y, 2.0f))
 	{

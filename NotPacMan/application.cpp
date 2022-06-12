@@ -14,18 +14,28 @@ void Application::Init(sf::RenderWindow* wind)
     player.direction = sf::Vector2f(0.0f, 0.0f);    // Start player moving right
     player.shape.setPosition(player.position);
     player.shape.setSize(sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f));
-    player.shape.setFillColor(sf::Color::Green);
+    player.shape.setFillColor(sf::Color::Yellow);
     player.shape.setOutlineColor(sf::Color::Black);
     player.shape.setOutlineThickness(0.0f);
     // Init enemy -- TO BE MOVED TO ENEMY CLASS INIT
-    enemy.Init(grid, &player);
-    enemy.position = sf::Vector2f(shapeWidth * 17, shapeHeight * 9);
-    enemy.shape.setPosition(enemy.position);
-    enemy.shape.setSize(sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f));
-    enemy.shape.setFillColor(sf::Color::Red);
-    enemy.shape.setOutlineColor(sf::Color::Black);
-    enemy.shape.setOutlineThickness(0.0f);
-    enemy.direction = sf::Vector2f(-1.0f, 0.0f);
+    blinky.Init(grid, &player);
+    blinky.position = sf::Vector2f(shapeWidth * 17, shapeHeight * 9);
+    blinky.shape.setPosition(blinky.position);
+    blinky.shape.setSize(sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f));
+    blinky.shape.setFillColor(sf::Color::Red);
+    blinky.shape.setOutlineColor(sf::Color::Black);
+    blinky.shape.setOutlineThickness(0.0f);
+    blinky.direction = sf::Vector2f(-1.0f, 0.0f);
+    // Init enemy -- TO BE MOVED TO ENEMY CLASS INIT
+    pinky.Init(grid, &player);
+    pinky.position = sf::Vector2f(shapeWidth * 1, shapeHeight * 9);
+    pinky.shape.setPosition(pinky.position);
+    pinky.shape.setSize(sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f));
+    sf::Color Pink(255, 184, 255, 255);
+    pinky.shape.setFillColor(Pink);
+    pinky.shape.setOutlineColor(sf::Color::Black);
+    pinky.shape.setOutlineThickness(0.0f);
+    pinky.direction = sf::Vector2f(-1.0f, 0.0f);
 }
 
 void Application::CleanUp()
@@ -105,20 +115,39 @@ int Application::Update()
         // Player update
         player.Update();
 
-        // Update enemy position
-        tempPos = enemy.position;
-        tempPos.x = enemy.position.x + (enemy.direction.x * playerSpeed);
-        tempPos.y = enemy.position.y + (enemy.direction.y * playerSpeed);
-        enemy.position = tempPos;
-        // Update enemy current node
-        enemy.currentNode = &grid[(int)(std::floor((tempPos.x + (shapeWidth * 0.5f)) / shapeWidth))][(int)(std::floor((tempPos.y + (shapeHeight * 0.5f)) / shapeHeight))];
-         // Update enemy neighbours
-        enemy.leftAdj = &grid[enemy.currentNode->gridPos.x - 1][enemy.currentNode->gridPos.y];
-        enemy.rightAdj = &grid[enemy.currentNode->gridPos.x + 1][enemy.currentNode->gridPos.y];
-        enemy.upAdj = &grid[enemy.currentNode->gridPos.x][enemy.currentNode->gridPos.y - 1];
-        enemy.downAdj = &grid[enemy.currentNode->gridPos.x][enemy.currentNode->gridPos.y + 1];
+        // Update enemy position -- TO ME MOVED TO ENEMY CLASS
+        tempPos = blinky.position;
+        tempPos.x = blinky.position.x + (blinky.direction.x * playerSpeed);
+        tempPos.y = blinky.position.y + (blinky.direction.y * playerSpeed);
+        blinky.position = tempPos;
+        // Update blinky current node
+        blinky.currentNode = &grid[(int)(std::floor((tempPos.x + (shapeWidth * 0.5f)) / shapeWidth))][(int)(std::floor((tempPos.y + (shapeHeight * 0.5f)) / shapeHeight))];
+         // Update blinky neighbours
+        blinky.leftAdj = &grid[blinky.currentNode->gridPos.x - 1][blinky.currentNode->gridPos.y];
+        blinky.rightAdj = &grid[blinky.currentNode->gridPos.x + 1][blinky.currentNode->gridPos.y];
+        blinky.upAdj = &grid[blinky.currentNode->gridPos.x][blinky.currentNode->gridPos.y - 1];
+        blinky.downAdj = &grid[blinky.currentNode->gridPos.x][blinky.currentNode->gridPos.y + 1];
         // Enemy update
-        enemy.Update();
+        blinky.Update();
+
+        // Update enemy position -- TO ME MOVED TO ENEMY CLASS
+        tempPos = pinky.position;
+        tempPos.x = pinky.position.x + (pinky.direction.x * playerSpeed);
+        tempPos.y = pinky.position.y + (pinky.direction.y * playerSpeed);
+        pinky.position = tempPos;
+        // Update pinky current node
+        pinky.currentNode = &grid[(int)(std::floor((tempPos.x + (shapeWidth * 0.5f)) / shapeWidth))][(int)(std::floor((tempPos.y + (shapeHeight * 0.5f)) / shapeHeight))];
+        // Update pinky neighbours
+        pinky.leftAdj = &grid[pinky.currentNode->gridPos.x - 1][pinky.currentNode->gridPos.y];
+        pinky.rightAdj = &grid[pinky.currentNode->gridPos.x + 1][pinky.currentNode->gridPos.y];
+        pinky.upAdj = &grid[pinky.currentNode->gridPos.x][pinky.currentNode->gridPos.y - 1];
+        pinky.downAdj = &grid[pinky.currentNode->gridPos.x][pinky.currentNode->gridPos.y + 1];
+        // Enemy update
+        pinky.Update();
+
+        // Collision detection
+        if (AABBCollision(player.shape, pinky.shape))
+            std::cout << "Collision!\n";
 
         // Render
         Render();
@@ -139,7 +168,8 @@ void Application::Render()
         }
     }
     window->draw(player.shape);
-    window->draw(enemy.shape);
+    window->draw(blinky.shape);
+    window->draw(pinky.shape);
     window->display();
 }
 
@@ -193,4 +223,20 @@ void Application::FileToGrid(std::string filename)
 bool Application::FuzzyEquals(float a, float b, float tolerance)
 {
     return std::abs(a - b) <= tolerance;
+}
+
+bool Application::AABBCollision(sf::RectangleShape a, sf::RectangleShape b)
+{
+    sf::Vector2f aPos, bPos;
+    sf::Vector2f aSize, bSize;
+    aPos = a.getPosition();
+    bPos = b.getPosition();
+    aSize = a.getSize();
+    bSize = b.getSize();
+
+    // Return true if:
+    return aPos.x < bPos.x + bSize.x // A's left side is left of B's right side
+        && aPos.x + aSize.x > bPos.x // A's right side is right of B's left side
+        && aPos.y < bPos.y + bSize.y // A's top is higher than B's bottom
+        && aPos.y + aSize.y > bPos.y; // A's bottom is lower than B's top
 }
