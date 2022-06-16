@@ -14,7 +14,7 @@ class Application
 public:
 	void Init(sf::RenderWindow* window);
 	void CleanUp();
-	int Update();
+	int Update(float dt);
 	void Render();
 	void InitGrid();
 	void FileToGrid(std::string filename);
@@ -30,7 +30,7 @@ public:
 	Player player;
 	float playerTimer;
 	float playerTimerMax = 50;
-	float playerSpeed = 1.5f;
+	float playerSpeed = 80.0f;
 	float movementTolerance = 10.0f;
 
 	// Enemies
