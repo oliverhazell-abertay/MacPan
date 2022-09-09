@@ -1,6 +1,6 @@
 #include "enemy.h"
 
-void Enemy::Init(Node grid[GRID_WIDTH][GRID_HEIGHT], Player* targetPlayer, Node* home)
+Enemy::Enemy(Node grid[GRID_WIDTH][GRID_HEIGHT], Player* targetPlayer, Node* home, sf::Vector2f startPos, sf::Vector2f size, sf::Color colour, float startSpeed)
 {
 	// Init pathfinder
 	pathfinder.Init(grid);
@@ -8,9 +8,21 @@ void Enemy::Init(Node grid[GRID_WIDTH][GRID_HEIGHT], Player* targetPlayer, Node*
 	player = targetPlayer;
 	// Init home node
 	homeNode = home;
+	// Init position
+	position = startPos;
+	shape.setPosition(position);
+	// Init size
+	shape.setSize(size);
+	// Main colour
+	mainColour = colour;
+	shape.setFillColor(currentColour);
+	shape.setOutlineColor(sf::Color::Black);
+	shape.setOutlineThickness(0.0f);
 	// Flash colours
 	flashColourLight = sf::Color(0, 65, 163, 255);
 	flashColourDark = sf::Color(0, 50, 128, 255);
+	// Init speed
+	SetSpeed(startSpeed);
 }
 
 void Enemy::Update(float dt)
@@ -61,7 +73,7 @@ void Enemy::Update(float dt)
 	if (!targetReached)
 		MoveTowardsTarget();
 	// Update gameObject
-	GameObject::Update();
+	GameObject::Update(dt);
 }
 
 void Enemy::MoveTowardsTarget()

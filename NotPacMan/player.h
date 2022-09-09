@@ -4,6 +4,7 @@
 class Player : public GameObject
 {
 public:
+	Player(sf::Vector2f startPos, sf::Vector2f size, float startSpeed);
 	void Update(float dt);
 	bool powered = false;
 private:

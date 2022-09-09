@@ -1,4 +1,7 @@
-﻿  application.cpp
+﻿  NotPacMan.cpp
+  application.cpp
   enemy.cpp
+  gameObject.cpp
+  player.cpp
   Generating Code...
   NotPacMan.vcxproj -> C:\Users\olive\Documents\Portfolio\NotPacMan\NotPacMan\Debug\NotPacMan.exe

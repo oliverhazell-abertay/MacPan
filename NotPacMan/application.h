@@ -15,6 +15,7 @@ public:
 	void Init(sf::RenderWindow* window);
 	void CleanUp();
 	int Update(float dt);
+	void Input(float dt);
 	void Render();
 	void InitGrid();
 	void FileToGrid(std::string filename);
@@ -26,18 +27,18 @@ public:
 	sf::RenderWindow* window;
 	sf::Font myFont;
 
-	// Player values -- TO BE MOVED TO PLAYER CLASS
-	Player player;
-	float playerTimer;
-	float playerTimerMax = 50;
-	float playerSpeed = 80.0f;
 	float movementTolerance = 10.0f;
 
+	// Player object
+	Player* player;
 	// Enemies
-	Enemy blinky;
-	Enemy pinky;
+	Enemy* blinky;
+	Enemy* inky;
+	Enemy* pinky;
 
 	// Collision detection
 	bool AABBCollision(sf::RectangleShape a, sf::RectangleShape b);
+
+	sf::Vector2i FindCurrentNode(GameObject gameObject);
 
 };

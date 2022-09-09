@@ -7,7 +7,7 @@
 class Enemy : public GameObject
 {
 public:
-	void Init(Node grid[GRID_WIDTH][GRID_HEIGHT], Player* targetPlayer, Node* home);
+	Enemy(Node grid[GRID_WIDTH][GRID_HEIGHT], Player* targetPlayer, Node* home, sf::Vector2f startPos, sf::Vector2f size, sf::Color color, float startSpeed);
 	void Update(float dt);
 	void MoveTowardsTarget();
 	bool FuzzyEquals(float a, float b, float tolerance);
@@ -15,6 +15,7 @@ public:
 
 	Pathfinder pathfinder;
 	Player* player;
+	Node* grid[GRID_WIDTH][GRID_HEIGHT];
 	Node* lastPlayerNode;
 	Node target;
 	Node* homeNode;

@@ -1,13 +1,43 @@
 #include "gameObject.h"
 #include "player.h"
 
-void GameObject::Update()
+void GameObject::Update(float dt)
 {
 	// Update next node
 	GetNextNode();
 
-	// Collision detection - Check next node in direction game object is headed.
-	//						 If next node is obstacle, stop moving
+	// Collision detection
+	CollisionDetection();
+
+	// Update position
+	sf::Vector2f tempPos = position;
+	tempPos.x = position.x + (direction.x * speed * dt);
+	tempPos.y = position.y + (direction.y * speed * dt);
+	position = tempPos;
+	
+	// Update shape position for render
+	shape.setPosition(position);
+}
+
+void GameObject::GetNextNode()
+{
+	// Update next Node
+	// If moving laterally
+	if (direction.x != 0.0f)
+		nextNode = (direction.x < 0.0f) ? leftAdj : rightAdj;
+	// If moving vertically
+	if (direction.y != 0.0f)
+		nextNode = (direction.y < 0.0f) ? upAdj : downAdj;
+	// If not moving
+	if (direction.x == 0.0f && direction.y == 0.0f)
+		nextNode = NULL;
+}
+
+void GameObject::CollisionDetection()
+{
+	// Check next node in direction game object is headed.
+	// If next node is obstacle, stop moving
+	// 
 	// Moving left
 	if (nextNode && nextNode == leftAdj && nextNode->type == TileType::obstacle)
 	{
@@ -45,20 +75,4 @@ void GameObject::Update()
 		}
 	}
 
-	// Update shape position for render
-	shape.setPosition(position);
-}
-
-void GameObject::GetNextNode()
-{
-	// Update next Node
-	// If moving laterally
-	if (direction.x != 0.0f)
-		nextNode = (direction.x < 0.0f) ? leftAdj : rightAdj;
-	// If moving vertically
-	if (direction.y != 0.0f)
-		nextNode = (direction.y < 0.0f) ? upAdj : downAdj;
-	// If not moving
-	if (direction.x == 0.0f && direction.y == 0.0f)
-		nextNode = NULL;
 }

@@ -1,7 +1,23 @@
 #include "player.h"
 
+Player::Player(sf::Vector2f startPos, sf::Vector2f size, float startSpeed)
+{
+	// Init position
+	position = startPos;
+	shape.setPosition(position);
+	// Init shape
+	shape.setSize(size);
+	shape.setFillColor(sf::Color::Yellow);
+	shape.setOutlineColor(sf::Color::Black);
+	shape.setOutlineThickness(0.0f);
+	// Init speed
+	SetSpeed(startSpeed);
+}
+
 void Player::Update(float dt)
 {
+	// Update gameObject
+	GameObject::Update(dt);
 	// Eat pellets
 	EatPellets();
 	// Powered timer
@@ -16,8 +32,6 @@ void Player::Update(float dt)
 			powerTimer = 0.0f;
 		}
 	}
-	// Update gameObject
-	GameObject::Update();
 }
 
 void Player::EatPellets()
