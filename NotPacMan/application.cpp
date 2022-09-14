@@ -9,7 +9,7 @@ void Application::Init(sf::RenderWindow* wind)
     window = wind;
     // Init grid
     InitGrid();
-    // Init player -- TO BE MOVED TO PLAYER CLASS INIT
+    // Init player
     player = new Player(sf::Vector2f(shapeWidth * 9, shapeHeight * 4), 
                             sf::Vector2f(shapeWidth * 0.97f, shapeHeight * 0.97f), 
                             80.0f);
@@ -56,29 +56,20 @@ int Application::Update(float dt)
     // Player update
     player->Update(dt);
 
-    // Update blinky current node
-    sf::Vector2i blinkyGridPos = FindCurrentNode(*blinky);
-    blinky->currentNode = &grid[blinkyGridPos.x][blinkyGridPos.y];
-    // Enemy update
-    blinky->Update(dt);
-
-    // Update pinky current node
-    sf::Vector2i pinkyGridPos = FindCurrentNode(*pinky);
-    pinky->currentNode = &grid[pinkyGridPos.x][pinkyGridPos.y];
-    // Enemy update
-    pinky->Update(dt);
-
-    // Update inky current node
-    sf::Vector2i inkyGridPos = FindCurrentNode(*inky);
-    inky->currentNode = &grid[inkyGridPos.x][inkyGridPos.y];
-    // Enemy update
-    inky->Update(dt);
+    // Update blinky
+    UpdateEnemy(blinky, dt);
+    // Update pinky
+    UpdateEnemy(pinky, dt);
+    // Update inky
+    UpdateEnemy(inky, dt);
 
     // Collision detection
     if (player->currentNode == blinky->currentNode)
-        std::cout << "Collision!\n";
+        std::cout << "Collision with Blinky!\n";
     if (player->currentNode == pinky->currentNode)
-        std::cout << "Collision!\n";
+        std::cout << "Collision with Pinky!\n";
+    if (player->currentNode == inky->currentNode)
+        std::cout << "Collision with Inky!\n";
 
     // Render
     Render();
@@ -243,4 +234,13 @@ sf::Vector2i Application::FindCurrentNode(GameObject gameObject)
     currentNodePos.x = (int)(std::floor((gameObject.position.x + (shapeWidth * 0.5f)) / shapeWidth));
     currentNodePos.y = (int)(std::floor((gameObject.position.y + (shapeHeight * 0.5f)) / shapeHeight));
     return currentNodePos;
+}
+
+void Application::UpdateEnemy(Enemy* enemy, float dt)
+{
+    // Update current node
+    sf::Vector2i enemyGridPos = FindCurrentNode(*enemy);
+    enemy->currentNode = &grid[enemyGridPos.x][enemyGridPos.y];
+    // Enemy update
+    enemy->Update(dt);
 }

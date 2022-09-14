@@ -9,6 +9,7 @@ public:
 	bool powered = false;
 private:
 	void EatPellets();
+	// Power pellet variables
 	float powerTimer = 0.0f;
 	float powerDuration = 5.0f;
 };

@@ -18,17 +18,24 @@ public:
 	void Input(float dt);
 	void Render();
 	void InitGrid();
+	// Grid loading
 	void FileToGrid(std::string filename);
+	// Fuzzy equals for player turning
 	bool FuzzyEquals(float a, float b, float tolerance);
+	// Collision detection
+	bool AABBCollision(sf::RectangleShape a, sf::RectangleShape b);
+	sf::Vector2i FindCurrentNode(GameObject gameObject);
+	// Calculate enemy current node and update. Needed for multithreading
+	void UpdateEnemy(Enemy* enemy, float dt);
 
+	// Screen grid variables
 	Node grid[GRID_WIDTH][GRID_HEIGHT];
 	const float shapeWidth = WINDOW_WIDTH / GRID_WIDTH;
 	const float shapeHeight = WINDOW_HEIGHT / GRID_HEIGHT;
 	sf::RenderWindow* window;
 	sf::Font myFont;
 
-	float movementTolerance = 10.0f;
-
+private:
 	// Player object
 	Player* player;
 	// Enemies
@@ -36,9 +43,9 @@ public:
 	Enemy* inky;
 	Enemy* pinky;
 
-	// Collision detection
-	bool AABBCollision(sf::RectangleShape a, sf::RectangleShape b);
+	// Fuzzy equals for turning variable
+	float movementTolerance = 10.0f;
 
-	sf::Vector2i FindCurrentNode(GameObject gameObject);
+
 
 };
