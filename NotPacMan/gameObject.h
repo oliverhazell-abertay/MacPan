@@ -9,6 +9,7 @@ public:
 	sf::RectangleShape shape;
 	sf::Vector2f direction;
 	sf::Vector2f position;
+	// Neighbours
 	Node* upAdj;
 	Node* downAdj;
 	Node* leftAdj;

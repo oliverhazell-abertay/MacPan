@@ -38,6 +38,12 @@ void Application::CleanUp()
 
     delete blinky;
     blinky = NULL;
+
+    delete pinky;
+    pinky = NULL;
+
+    delete inky;
+    inky = NULL;
 }
 
 int Application::Update(float dt)
